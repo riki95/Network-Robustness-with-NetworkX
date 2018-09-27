@@ -1,7 +1,8 @@
 import networkx as nx
 import random
-import analyse_realistic_graph.py as ga
 import matplotlib.pyplot as plt
+
+from analyse_realistic_graph import compute_trust, do_computations
 
 
 def remove_random_node(g, pos, name, n=1):
@@ -30,7 +31,7 @@ def show(g, pos, name):
 
 def main():
     g = nx.DiGraph(nx.scale_free_graph(20))
-    print()
+    do_computations(g)
 
 
 if __name__ == '__main__':

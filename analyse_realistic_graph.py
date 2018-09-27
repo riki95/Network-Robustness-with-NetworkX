@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import collections
 
 file = None  # open('out', 'w')
-plotOn = True
+plotOn = False
 g = nx.DiGraph()
 
 
@@ -60,7 +60,7 @@ def compute_centrality(g):
     return max_centrality
 
 
-def print_node_degrees(node):
+def print_node_degrees(node, g):
     print('\tDegrees data for node ', node, file=file)
     print('\t\tMost important node In-Degree:', g.in_degree(node),
           ' || Weighted: ', g.in_degree(node, weight='weight'), file=file)
@@ -121,15 +121,13 @@ def compute_component(comps):
     return giant_comp
 
 
-def do_computations():
-    print('Bitcoin Alpha Graph:', file=file)
+def do_computations(g):
     print('\tNumber of nodes:', g.number_of_nodes(), file=file)
     print('\tNumber of edges:', g.number_of_edges(), file=file)
     print('\tNumber of self-loops:', g.number_of_selfloops(), file=file)
 
     max_centrality = compute_centrality(g)  # Need to set how to calculate centrality inside the function
-    print_node_degrees(max_centrality)
-    print_node_degrees(['2', '3', '4', '7'])  # These are other important nodes
+    print_node_degrees(max_centrality, g)
 
     print('\n\tNumber of triangles:', sum(nx.triangles(g.to_undirected()).values()) / 3, file=file)
     print('\tAverage clustering:', nx.average_clustering(g.to_undirected()), file=file)
@@ -142,15 +140,3 @@ def do_computations():
     print('\n\tWeakly connected components:', file=file)
     connected_comps_weak = list(nx.weakly_connected_component_subgraphs(g))
     weak_giant = compute_component(connected_comps_weak)
-
-
-# Just activate functions that you want to launch.
-def main():
-    compute_trust(g)
-    # do_computations(g)
-    # draw_graph(g)
-
-
-if __name__ == '__main__':
-    create_graph()
-    main()
