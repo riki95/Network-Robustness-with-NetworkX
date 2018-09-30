@@ -2,7 +2,7 @@ import networkx as nx
 import random
 import matplotlib.pyplot as plt
 
-from analyse_realistic_graph import compute_trust, do_computations
+from Lab1.analyse_realistic_graph import do_computations
 
 
 def remove_random_node(g, pos, name, n=1):
