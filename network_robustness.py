@@ -32,13 +32,13 @@ def draw_graph_fixed(g):
         node_pose[i] = (random(), random())
 
     plt.subplot(121)
-    fig1 = nx.draw_networkx(g, pos=node_pose, fixed=node_pose.keys())
+    fig1 = nx.draw_networkx(g, pos=node_pose, node_color='b', fixed=node_pose.keys())
 
     # Two nodes are removed
     e = [4, 6]
     g.remove_nodes_from(e)
     plt.subplot(122)
-    fig2 = nx.draw_networkx(g, pos=node_pose, fixed=node_pose.keys())
+    fig2 = nx.draw_networkx(g, pos=node_pose, node_color='b', fixed=node_pose.keys())
 
     plt.show()
 
@@ -48,7 +48,6 @@ def main():
     do_computations(g)
     remove_random_node(g)
 
-    g = nx.barabasi_albert_graph(10, 3)
     draw_graph_fixed(g)
 
 
