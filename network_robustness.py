@@ -6,6 +6,7 @@ import pylab
 from Lab1.analyse_realistic_graph import do_computations
 
 g = nx.DiGraph()
+node_pose = {}
 
 
 def remove_random_node(g, n=1):
@@ -27,16 +28,15 @@ def draw_graph_fixed(g):
     # Intact graph now
     figure = plt.figure()
 
-    node_pose = {}
     for i in g.nodes():
         node_pose[i] = (random(), random())
 
     plt.subplot(121)
     fig1 = nx.draw_networkx(g, pos=node_pose, node_size=50, font_size=5, arrowsize=3, node_color='b', fixed=node_pose.keys())
 
+
+def draw_graph2(g):
     # Two nodes are removed
-    e = [1,2,3,4,5]
-    g.remove_nodes_from(e)
     plt.subplot(122)
     fig2 = nx.draw_networkx(g, pos=node_pose, node_size=25, font_size=5, arrowsize=3, node_color='b', fixed=node_pose.keys())
 
@@ -44,11 +44,15 @@ def draw_graph_fixed(g):
 
 
 def main():
-    # g = nx.DiGraph(nx.scale_free_graph(20))
-    g = nx.fast_gnp_random_graph(20, 0.1)
-    # do_computations(g)
+    g = nx.DiGraph(nx.scale_free_graph(20))
+    do_computations(g)
     # create_graph()
     draw_graph_fixed(g)
+
+    rem = [1]
+    g.remove_nodes_from(rem)
+    do_computations(g)
+    draw_graph2(g)
 
 
 if __name__ == '__main__':
