@@ -59,8 +59,7 @@ def draw_graph4(g, ns, fs):
                             fixed=node_pose.keys())
     plt.savefig('data/' + str('g4') + '.png', dpi=500)
 
-    plt.show()
-    
+
 # when you do this remember do compute closeness on analysis
 def scale_free_robustness():
     ns = 100
@@ -70,7 +69,7 @@ def scale_free_robustness():
     best_node = do_computations(g, 1)
 
     g_remove_random = g.copy()
-    remove_random_node(g_remove_random, 8)
+    remove_random_node(g_remove_random, 10)
     draw_graph2(g_remove_random, ns, fs)
     do_computations(g_remove_random, 2)
 
@@ -79,6 +78,8 @@ def scale_free_robustness():
     g_remove_most_important.remove_nodes_from([best_node])
     draw_graph3(g_remove_most_important, ns, fs)
     do_computations(g_remove_most_important, 3)
+
+    plt.show()
 
 
 # when you do this remember do compute degree on analysis
@@ -106,6 +107,8 @@ def bitcoin_robustness():
     g_remove_most_important.remove_nodes_from(best_nodes)
     draw_graph4(g_remove_most_important, ns, fs)
     do_computations(g_remove_most_important, 4)
+
+    plt.show()
 
 
 def main():
