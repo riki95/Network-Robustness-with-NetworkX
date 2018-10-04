@@ -33,14 +33,16 @@ def draw_graph_fixed(g, ns, fs):
         node_pose[i] = (random(), random())
 
     plt.subplot(221)
-    fig1 = nx.draw_networkx(g, pos=node_pose, node_size=ns, font_size=fs, arrowsize=3, node_color='b', fixed=node_pose.keys())
+    fig1 = nx.draw_networkx(g, pos=node_pose, node_size=ns, font_size=fs, arrowsize=3, node_color='b',
+                            fixed=node_pose.keys())
     plt.savefig('data/' + str('g1') + '.png', dpi=500)
 
 
 def draw_graph2(g, ns, fs):
     # Two nodes are removed
     plt.subplot(222)
-    fig2 = nx.draw_networkx(g, pos=node_pose, node_size=ns, font_size=fs, arrowsize=3, node_color='b', fixed=node_pose.keys())
+    fig2 = nx.draw_networkx(g, pos=node_pose, node_size=ns, font_size=fs, arrowsize=3, node_color='b',
+                            fixed=node_pose.keys())
     plt.savefig('data/' + str('g2') + '.png', dpi=500)
 
 
