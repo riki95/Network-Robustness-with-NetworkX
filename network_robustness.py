@@ -22,7 +22,7 @@ def remove_random_node(g, n):
         node = random.choice(list(g.node.keys()))
 
         g.remove_node(node)
-        print("Removed", node)
+
 
 
 def draw_graph_fixed(g, ns, fs):
@@ -106,16 +106,16 @@ def bitcoin_robustness():
     best_nodes = [1,2,3,4,7]
     g_remove_most_importants = g.copy()
     print("Removing best nodes: " + str(best_nodes))
-    g_remove_most_important.remove_nodes_from(best_nodes)
-    draw_graph4(g_remove_most_important, ns, fs)
-    do_computations(g_remove_most_important, 4)
+    g_remove_most_importants.remove_nodes_from(best_nodes)
+    draw_graph4(g_remove_most_importants, ns, fs)
+    do_computations(g_remove_most_importants, 4)
 
     plt.show()
 
 
 def main():
-    scale_free_robustness()
-    #bitcoin_robustness()
+    #scale_free_robustness()
+    bitcoin_robustness()
 
 
 if __name__ == '__main__':
