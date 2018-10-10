@@ -1,13 +1,10 @@
-import networkx as nx
-from random import random
 import matplotlib.pyplot as plt
-import pylab
+import networkx as nx
 
-from Lab1.analyse_realistic_graph import do_computations, create_graph, compute_centrality, draw_graph
+from Lab1.analyse_realistic_graph import do_computations, create_graph, compute_centrality
 
 g = nx.DiGraph()
 node_pose = {}
-plotOn = False
 drawGraphOn = True
 
 
@@ -33,29 +30,27 @@ def draw_graph(g, layout, title, namefile):
     else:
         nx.draw_networkx(g, node_size=50, font_size=6, arrowsize=3, node_color='b', pos=layout)
     plt.savefig('data/' + namefile + '.png', dpi=500)
-    plt.show()
+    plt.close()
 
 
 # when you do this remember do compute closeness on analysis
 def scale_free_robustness():
-    ns = 100
-    fs = 8
     g = nx.DiGraph(nx.scale_free_graph(20)).to_undirected()
 
-    print("Graph")
     fixed_positions = {1: (0, 0), 2: (-1, 2)}  # dict with two of the positions set
     fixed_nodes = fixed_positions.keys()
     pos = nx.spring_layout(g, pos=fixed_positions, fixed=fixed_nodes)
 
+    print("Graph")
     if drawGraphOn:
-        draw_graph(g, pos, "Graph", '1')
-    best_node = do_computations(g, 1)
+        draw_graph(g, pos, "Graph", 'g1')
+    do_computations(g, 1)
 
     print("Graph with 10 random nodes removed")
     g_remove_random = g.copy()
     remove_random_node(g_remove_random, 10)
     if drawGraphOn:
-        draw_graph(g_remove_random, pos, "Graph with 10 random nodes removed", '2')
+        draw_graph(g_remove_random, pos, "Graph with 10 random nodes removed", 'g2')
     do_computations(g_remove_random, 2)
 
     g_remove_most_important = g.copy()
@@ -64,14 +59,12 @@ def scale_free_robustness():
         print("Removed best node: " + str(best_node))
         g_remove_most_important.remove_nodes_from([best_node])
         if drawGraphOn:
-            draw_graph(g_remove_most_important, pos, "Graph with node " + str(best_node) + " removed", str(x+3))
+            draw_graph(g_remove_most_important, pos, "Graph with node " + str(best_node) + " removed", 'g' + str(x+3))
         do_computations(g_remove_most_important, 3)
 
 
 # when you do this remember do compute degree on analysis
 def bitcoin_robustness():
-    ns = 50
-    fs = 2
     create_graph()
     if drawGraphOn:
         draw_graph(g)
