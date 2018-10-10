@@ -26,48 +26,14 @@ def remove_random_node(g, n):
         g.remove_node(node)
 
 
-def draw_graph(g, layout, title, nameFile):
+def draw_graph(g, layout, title, namefile):
     plt.title(title)
-    nx.draw_networkx(g, node_size=50, font_size=6, arrowsize=3, node_color='b', pos=layout)
-    plt.savefig('data/' + nameFile + '.png', dpi=500)
+    if g.number_of_nodes() < 100:
+        nx.draw_networkx(g, node_size=150, font_size=9, arrowsize=3, node_color='b', pos=layout)
+    else:
+        nx.draw_networkx(g, node_size=50, font_size=6, arrowsize=3, node_color='b', pos=layout)
+    plt.savefig('data/' + namefile + '.png', dpi=500)
     plt.show()
-
-
-def draw_graph_fixed(g, ns, fs):
-    # Intact graph now
-    figure = plt.figure()
-
-    for i in g.nodes():
-        node_pose[i] = (random(), random())
-
-    plt.subplot(221)
-    fig1 = nx.draw_networkx(g, pos=node_pose, node_size=ns, font_size=fs, arrowsize=3, node_color='b',
-                            fixed=node_pose.keys())
-    plt.savefig('data/' + str('g1') + '.png', dpi=500)
-
-
-def draw_graph2(g, ns, fs):
-    # Two nodes are removed
-    plt.subplot(222)
-    fig2 = nx.draw_networkx(g, pos=node_pose, node_size=ns, font_size=fs, arrowsize=3, node_color='b',
-                            fixed=node_pose.keys())
-    plt.savefig('data/' + str('g2') + '.png', dpi=500)
-
-
-def draw_graph3(g, ns, fs):
-    # Two nodes are removed
-    plt.subplot(223)
-    fig3 = nx.draw_networkx(g, pos=node_pose, node_size=ns, font_size=fs, arrowsize=3, node_color='b',
-                            fixed=node_pose.keys())
-    plt.savefig('data/' + str('g3') + '.png', dpi=500)
-
-
-def draw_graph4(g, ns, fs):
-    # Two nodes are removed
-    plt.subplot(224)
-    fig3 = nx.draw_networkx(g, pos=node_pose, node_size=ns, font_size=fs, arrowsize=3, node_color='b',
-                            fixed=node_pose.keys())
-    plt.savefig('data/' + str('g4') + '.png', dpi=500)
 
 
 # when you do this remember do compute closeness on analysis
@@ -98,11 +64,8 @@ def scale_free_robustness():
         print("Removed best node: " + str(best_node))
         g_remove_most_important.remove_nodes_from([best_node])
         if drawGraphOn:
-            draw_graph(g_remove_most_important, pos, "Graph with node " + str(best_node) + "removed", str(x+3))
+            draw_graph(g_remove_most_important, pos, "Graph with node " + str(best_node) + " removed", str(x+3))
         do_computations(g_remove_most_important, 3)
-
-
-    plt.show()
 
 
 # when you do this remember do compute degree on analysis
@@ -135,12 +98,10 @@ def bitcoin_robustness():
         draw_graph(g_remove_most_importants)
     do_computations(g_remove_most_importants, 4)
 
-    plt.show()
-
 
 def main():
     scale_free_robustness()
-    #bitcoin_robustness()
+    # bitcoin_robustness()
 
 
 if __name__ == '__main__':
