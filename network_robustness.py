@@ -3,9 +3,9 @@ import networkx as nx
 
 from Lab1.analyse_realistic_graph import do_computations, create_graph, compute_centrality
 
-g = nx.DiGraph()
+g = nx.Graph().to_undirected()
 node_pose = {}
-drawGraphOn = True
+drawGraphOn = False
 
 
 def create_graph():
@@ -54,47 +54,55 @@ def scale_free_robustness():
     do_computations(g_remove_random, 2)
 
     g_remove_most_important = g.copy()
-    for x in range(2):
+    for x in range(4):
         best_node = compute_centrality(g_remove_most_important)
         print("Removed best node: " + str(best_node))
         g_remove_most_important.remove_nodes_from([best_node])
         if drawGraphOn:
             draw_graph(g_remove_most_important, pos, "Graph with node " + str(best_node) + " removed", 'g' + str(x+3))
-        do_computations(g_remove_most_important, 3)
+        do_computations(g_remove_most_important, x+3)
 
 
 # when you do this remember do compute degree on analysis
 def bitcoin_robustness():
     create_graph()
+    g.to_undirected()
+    pos = nx.spring_layout(g)
+
+    print("Graph")
     if drawGraphOn:
-        draw_graph(g)
-    best_node = do_computations(g, 1)
+        draw_graph(g, pos, "Bitcoin Graph", 'g1')
+    do_computations(g, 1)
 
     g_remove_random = g.copy()
     remove_random_node(g_remove_random, 1000)
     if drawGraphOn:
-        draw_graph(g_remove_random)
+        draw_graph(g_remove_random, pos, "Graph with 1000 random removed", 'g2')
     do_computations(g_remove_random, 2)
 
     g_remove_most_important = g.copy()
-    print("Removing best node: " + str(best_node))
-    g_remove_most_important.remove_nodes_from([best_node])
-    if drawGraphOn:
-        draw_graph(g_remove_most_important)
-    do_computations(g_remove_most_important, 3)
+    for x in range(20):
+        best_node = compute_centrality(g_remove_most_important)
+        print("Removed best node: " + str(best_node))
+        g_remove_most_important.remove_nodes_from([best_node])
 
-    best_nodes = [1,2,3,4,7]
-    g_remove_most_importants = g.copy()
-    print("Removing best nodes: " + str(best_nodes))
-    g_remove_most_importants.remove_nodes_from(best_nodes)
-    if drawGraphOn:
-        draw_graph(g_remove_most_importants)
-    do_computations(g_remove_most_importants, 4)
+        draw_graph(g_remove_most_important, pos, "Graph with node " + str(best_node) + " removed",
+                   'g' + str(x + 3))
+        do_computations(g_remove_most_important, x + 3)
+
+    for x in range(980):
+        best_node = compute_centrality(g_remove_most_important)
+        print("Removed best node: " + str(best_node))
+        g_remove_most_important.remove_nodes_from([best_node])
+
+    draw_graph(g_remove_most_important, pos, "Graph with node " + str(best_node) + " removed",
+               'g' + str(x + 3))
+    do_computations(g_remove_most_important, x + 3)
 
 
 def main():
-    scale_free_robustness()
-    # bitcoin_robustness()
+    # scale_free_robustness()
+    bitcoin_robustness()
 
 
 if __name__ == '__main__':
