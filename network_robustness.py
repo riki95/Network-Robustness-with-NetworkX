@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import networkx as nx
+import heapq
 
 from Lab1.analyse_realistic_graph import do_computations, create_graph, compute_centrality
 
@@ -100,9 +101,144 @@ def bitcoin_robustness():
     do_computations(g_remove_most_important, x + 3)
 
 
+def bitcoin_robustness2():
+    create_graph()
+    g.to_undirected()
+    pos = nx.spring_layout(g)
+
+    g_remove_most_important = g.copy()
+    list_components = []
+    list_removed = []
+    list_diameters = []
+    list_diameters_number = []
+    list_diameters_max = []
+    list_diameters_min = []
+
+    comps = list(nx.connected_component_subgraphs(g_remove_most_important))
+    comp_len = len(comps)
+    diameters = [nx.diameter(comp.to_undirected()) for comp in comps]
+    list_diameters_max.append(max(diameters))
+    list_diameters_min.append(min(diameters))
+    list_diameters.append(sum(diameters) / len(diameters))
+    list_diameters_number.append(0)
+
+    for x in range(1000):
+        best_node = compute_centrality(g_remove_most_important, 'degree')
+        g_remove_most_important.remove_nodes_from([best_node])
+
+        comps = list(nx.connected_component_subgraphs(g_remove_most_important))
+        comp_len = len(comps)
+        if x == 10 or x==20 or x==30 or x==40 or x==50 or x==60 or x==70 or x==80 or x==90 or x==100 or x==200 \
+                or x==300 or x==400 or x==500 or x==600 or x==700 or x==900 or x==1000:
+            diameters = [nx.diameter(comp.to_undirected()) for comp in comps]
+            list_diameters_max.append(max(diameters))
+            list_diameters_min.append(min(diameters))
+            list_diameters.append(sum(diameters) / len(diameters))
+            list_diameters_number.append(x)
+        list_components.append(comp_len)
+        list_removed.append(x)
+
+    plt.plot(list_removed, list_components, 'r-')
+    plt.ylabel("Components")
+    plt.xlabel("Removed")
+    plt.legend(['Components', 'Diameters Max', 'Diameters Min', 'Diameters avg'], loc='upper right')
+    plt.show()
+
+
+def bitcoin_robustness3():
+    create_graph()
+    g.to_undirected()
+    pos = nx.spring_layout(g)
+
+    g_remove_most_important = g.copy()
+    list_components = []
+    list_removed = []
+    list_removed2 = [100,200,300,400,500,600,700,800,900,1000]
+    list_diameters = []
+    list_diameters_number = []
+    list_diameters_max = []
+    list_diameters_min = []
+    list_giantcomponentnodes = []
+
+    for x in range(1000):
+        best_node, nodes = compute_centrality(g_remove_most_important, 'degree')
+
+        comps = list(nx.connected_component_subgraphs(g_remove_most_important))
+        giant_comp = max(comps, key=len)
+        comp_nodes_number = giant_comp.number_of_nodes()
+        comp_len = len(comps)
+        if x == 10 or x == 20 or x == 30 or x == 40 or x == 50 or x == 60 or x == 70 or x == 80 or x == 90 or x == 100 or x == 200 \
+                or x == 300 or x == 400 or x == 500 or x == 600 or x == 700 or x == 900 or x == 1000:
+            diameters = [nx.diameter(comp.to_undirected()) for comp in comps]
+            list_diameters_max.append(max(diameters))
+            list_diameters_min.append(min(diameters))
+            list_diameters.append(sum(diameters) / len(diameters))
+            list_diameters_number.append(x)
+            list_giantcomponentnodes.append(comp_nodes_number)
+        list_components.append(comp_len)
+        list_removed.append(x)
+
+        g_remove_most_important.remove_nodes_from([best_node])
+
+        comps = list(nx.connected_component_subgraphs(g_remove_most_important))
+        comp_len = len(comps)
+        list_components.append(comp_len)
+        list_removed.append(x)
+
+    g_remove_most_important = g.copy()
+    list_components2 = []
+    list_giantcomponentnodes2 = []
+
+    for x in range(10):
+        best_node, nodes = compute_centrality(g_remove_most_important, 'closeness')
+        first_nodes = heapq.nlargest(100, nodes, key=nodes.get)
+        g_remove_most_important.remove_nodes_from(first_nodes)
+
+        comps = list(nx.connected_component_subgraphs(g_remove_most_important))
+        comp_len = len(comps)
+        giant_comp = max(comps, key=len)
+        comp_nodes_number = giant_comp.number_of_nodes()
+        list_giantcomponentnodes2.append(comp_nodes_number)
+        list_components2.append(comp_len)
+
+    g_remove_most_important = g.copy()
+    list_components3 = []
+    list_giantcomponentnodes3 = []
+
+    for x in range(10):
+        best_node, nodes = compute_centrality(g_remove_most_important, 'betweenness')
+        first_nodes = heapq.nlargest(100, nodes, key=nodes.get)
+        g_remove_most_important.remove_nodes_from(first_nodes)
+
+        comps = list(nx.connected_component_subgraphs(g_remove_most_important))
+        comp_len = len(comps)
+        giant_comp = max(comps, key=len)
+        comp_nodes_number = giant_comp.number_of_nodes()
+        list_giantcomponentnodes3.append(comp_nodes_number)
+        list_components3.append(comp_len)
+
+    plt.plot(list_removed, list_components, 'r-')
+    plt.plot(list_removed2, list_components2, 'b-')
+    plt.plot(list_removed2, list_components3, 'g-')
+    plt.ylabel("Components")
+    plt.xlabel("Removed")
+    plt.legend(['Degree', 'Closeness', 'Betweenness'], loc='upper right')
+    plt.show()
+
+    plt.plot(list_diameters_number, list_diameters_max, 'r-')
+    plt.plot(list_diameters_number, list_diameters_min, 'b-')
+    plt.plot(list_diameters_number, list_diameters, 'g-')
+    plt.ylabel("Diameter")
+    plt.xlabel("Removed")
+    plt.legend(['Max', 'Min', 'Average'], loc='upper right')
+    plt.show()
+
+    plt.plot(list_diameters_number, list_giantcomponentnodes, 'y-')
+
+
 def main():
     # scale_free_robustness()
-    bitcoin_robustness()
+    bitcoin_robustness3()
 
 
 if __name__ == '__main__':
