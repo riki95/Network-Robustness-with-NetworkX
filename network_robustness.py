@@ -105,50 +105,6 @@ def bitcoin_robustness():
     do_computations(g_remove_most_important, x + 3)
 
 
-def bitcoin_robustness2():
-    create_graph()
-    g.to_undirected()
-    pos = nx.spring_layout(g)
-
-    g_remove_most_important = g.copy()
-    list_components = []
-    list_removed = []
-    list_diameters = []
-    list_diameters_number = []
-    list_diameters_max = []
-    list_diameters_min = []
-
-    comps = list(nx.connected_component_subgraphs(g_remove_most_important))
-    comp_len = len(comps)
-    diameters = [nx.diameter(comp.to_undirected()) for comp in comps]
-    list_diameters_max.append(max(diameters))
-    list_diameters_min.append(min(diameters))
-    list_diameters.append(sum(diameters) / len(diameters))
-    list_diameters_number.append(0)
-
-    for x in range(1000):
-        best_node = compute_centrality(g_remove_most_important, 'degree')
-        g_remove_most_important.remove_nodes_from([best_node])
-
-        comps = list(nx.connected_component_subgraphs(g_remove_most_important))
-        comp_len = len(comps)
-        if x == 10 or x==20 or x==30 or x==40 or x==50 or x==60 or x==70 or x==80 or x==90 or x==100 or x==200 \
-                or x==300 or x==400 or x==500 or x==600 or x==700 or x==900 or x==1000:
-            diameters = [nx.diameter(comp.to_undirected()) for comp in comps]
-            list_diameters_max.append(max(diameters))
-            list_diameters_min.append(min(diameters))
-            list_diameters.append(sum(diameters) / len(diameters))
-            list_diameters_number.append(x)
-        list_components.append(comp_len)
-        list_removed.append(x)
-
-    plt.plot(list_removed, list_components, 'r-')
-    plt.ylabel("Components")
-    plt.xlabel("Removed")
-    plt.legend(['Components', 'Diameters Max', 'Diameters Min', 'Diameters avg'], loc='upper right')
-    plt.show()
-
-
 def bitcoin_robustness3():
     create_graph()
     g.to_undirected()
