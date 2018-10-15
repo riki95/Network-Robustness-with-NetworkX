@@ -74,42 +74,6 @@ def bitcoin_robustness():
     g.to_undirected()
     pos = nx.spring_layout(g)
 
-    print("Graph")
-    if drawGraphOn:
-        draw_graph(g, pos, "Bitcoin Graph", 'g1')
-    do_computations(g, 1)
-
-    g_remove_random = g.copy()
-    remove_random_node(g_remove_random, 1000)
-    if drawGraphOn:
-        draw_graph(g_remove_random, pos, "Graph with 1000 random removed", 'g2')
-    do_computations(g_remove_random, 2)
-
-    g_remove_most_important = g.copy()
-    for x in range(20):
-        best_node = compute_centrality(g_remove_most_important)
-        print("Removed best node: " + str(best_node))
-        g_remove_most_important.remove_nodes_from([best_node])
-
-        draw_graph(g_remove_most_important, pos, "Graph with node " + str(best_node) + " removed",
-                   'g' + str(x + 3))
-        do_computations(g_remove_most_important, x + 3)
-
-    for x in range(980):
-        best_node = compute_centrality(g_remove_most_important)
-        print("Removed best node: " + str(best_node))
-        g_remove_most_important.remove_nodes_from([best_node])
-
-    draw_graph(g_remove_most_important, pos, "Graph with node " + str(best_node) + " removed",
-               'g' + str(x + 3))
-    do_computations(g_remove_most_important, x + 3)
-
-
-def bitcoin_robustness3():
-    create_graph()
-    g.to_undirected()
-    pos = nx.spring_layout(g)
-
     #do_computations(g, 'g_start', 'degree')
 
     g_remove_most_important = g.copy()
@@ -309,23 +273,9 @@ def bitcoin_robustness3():
         plt.show()
 
 
-def prova():
-    create_graph()
-    g.to_undirected()
-    comps = list(nx.connected_component_subgraphs(g))
-    giant_comp = max(comps, key=len)  # This is a subgraph that we have to study
-
-    print('\tGiant component:')
-    print('\t\tNumber of nodes:', giant_comp.number_of_nodes())
-    print(type(giant_comp.number_of_nodes()))
-
-    print(giant_comp)
-    print(type(giant_comp))
-
-
 def main():
     # scale_free_robustness()
-    bitcoin_robustness3()
+    bitcoin_robustness()
 
 
 if __name__ == '__main__':
