@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import networkx as nx
 import heapq
+import random
 
 
 from Lab1.analyse_realistic_graph import do_computations, create_graph, compute_centrality, plot_distribution
@@ -10,7 +11,7 @@ node_pose = {}
 drawGraphOn = True
 plotOn = True
 diametersOn = True
-plotDiametersOn = True
+plotDiametersOn = False
 
 
 def create_graph():
@@ -243,10 +244,91 @@ def bitcoin_robustness():
         plt.show()
 
 
+def bitcoin_robustness_random():
+    create_graph()
+    g.to_undirected()
+    pos = nx.spring_layout(g)
+
+    g_remove_most_important = g.copy()
+    list_components = []
+    list_removed = []
+    list_removed2 = [0, 100,200,300,400,500,600,700,800,900,1000]
+    list_diameters = []
+    list_diameters_number = []
+    list_diameters_max = []
+    list_diameters_min = []
+    list_giantcomponentnodes = []
+
+    if drawGraphOn:
+        draw_graph(g, pos, "Graph", 'g1')
+
+    print("::: Computing Degree :::")
+    for x in range(2700):
+        best_node = nx.nodes(g_remove_most_important)
+        best_node2 = []
+        for n in best_node:
+            best_node2.append(n)
+
+        best_node = random.choice(best_node2)
+
+        # if x == 0 or x == 100 or x == 200 or x == 300 or x == 400 or x == 500 or x == 600 or x == 700 or x == 800 \
+        #         or x == 900 or x == 1000:
+        if x == 0 or x == 200 or x == 400 or x == 600 or x == 800 or x == 1000 or x == 1200 or x == 1400 or x == 1600 \
+                or x == 1800 or x == 2000:
+            print('----- Nodes removed: ', x, ' -----')
+            comps = list(nx.connected_component_subgraphs(g_remove_most_important))
+            giant_comp = max(comps, key=len)
+            comp_nodes_number = giant_comp.number_of_nodes()
+            comp_len = len(comps)
+
+            if diametersOn:
+                diameters = [nx.diameter(comp.to_undirected()) for comp in comps]
+                list_diameters_max.append(max(diameters))
+                list_diameters_min.append(min(diameters))
+                list_diameters.append(sum(diameters) / len(diameters))
+                list_diameters_number.append(x)
+
+                if plotDiametersOn and x == 1000:
+                    degree = dict(giant_comp.degree())
+                    plot_distribution(degree.values(), 'degree', 'degree')
+
+            list_giantcomponentnodes.append(comp_nodes_number)
+            list_components.append(comp_len)
+            list_removed.append(x)
+
+        g_remove_most_important.remove_nodes_from([best_node])
+
+    if drawGraphOn:
+        do_computations(g_remove_most_important, 'degree', 'degree')
+        draw_graph(g_remove_most_important, pos, "Graph with removal by degree", 'g2_degree')
+        plt.show()
+
+    if plotOn:
+        # Plot of degree diameters
+        plt.plot(list_removed, list_diameters_max, 'r-')
+        plt.plot(list_removed, list_diameters_min, 'b-')
+        plt.plot(list_removed, list_diameters, 'g-')
+        plt.ylabel("Diameter")
+        plt.xlabel("Removed nodes")
+        plt.legend(['Max', 'Min', 'Average'], loc='lower right')
+        plt.savefig('data/' + 'diagram_degree' + '.png', dpi=500)
+        plt.show()
+
+        # Plot of giant + components
+        plt.plot(list_removed, list_components, 'r-')
+
+        plt.plot(list_diameters_number, list_giantcomponentnodes, 'c-')
+
+        plt.ylabel("Components number and Giant Component number of nodes")
+        plt.xlabel("Removed nodes")
+        plt.legend(['Components', 'GiantComponent'], loc='upper right')
+        plt.savefig('data/' + 'centralities_and_giant' + '.png', dpi=500)
+        plt.show()
+
+
 def main():
-    # scale_free_robustness()
-    # sf_robustness()
-     bitcoin_robustness()
+    # bitcoin_robustness()
+    bitcoin_robustness_random()
 
 
 if __name__ == '__main__':
