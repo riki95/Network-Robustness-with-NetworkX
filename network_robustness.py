@@ -4,7 +4,7 @@ import heapq
 import random
 
 
-from Lab1.analyse_realistic_graph import do_computations, create_graph, compute_centrality, plot_distribution
+from Lab1.analyse_realistic_graph import do_computations, compute_centrality, plot_distribution
 
 g = nx.Graph().to_undirected()
 node_pose = {}
@@ -45,7 +45,7 @@ def bitcoin_robustness():
     g.to_undirected()
     pos = nx.spring_layout(g)
 
-    #do_computations(g, 'g_start', 'degree')
+    #do_computations(g)
 
     g_remove_most_important = g.copy()
     list_components = []
@@ -62,7 +62,7 @@ def bitcoin_robustness():
 
     print("::: Computing Degree :::")
     for x in range(1001):
-        best_node, nodes = compute_centrality(g_remove_most_important, 'degree')
+        best_node, nodes = compute_centrality(g_remove_most_important)
 
         comps = list(nx.connected_component_subgraphs(g_remove_most_important))
         giant_comp = max(comps, key=len)
@@ -91,7 +91,7 @@ def bitcoin_robustness():
         g_remove_most_important.remove_nodes_from([best_node])
 
     if drawGraphOn:
-        do_computations(g_remove_most_important, 'degree', 'degree')
+        do_computations(g_remove_most_important)
         draw_graph(g_remove_most_important, pos, "Graph with removal by degree", 'g2_degree')
         plt.show()
 
@@ -106,7 +106,7 @@ def bitcoin_robustness():
     print("::: Computing Closeness :::")
     for x in range(11):
         print('----- Nodes removed: ', x, ' -----')
-        best_node, nodes = compute_centrality(g_remove_most_important, 'closeness')
+        best_node, nodes = compute_centrality(g_remove_most_important)
         first_nodes = heapq.nlargest(100, nodes, key=nodes.get)
 
         comps = list(nx.connected_component_subgraphs(g_remove_most_important))
@@ -131,7 +131,7 @@ def bitcoin_robustness():
         g_remove_most_important.remove_nodes_from(first_nodes)
 
     if drawGraphOn:
-        do_computations(g_remove_most_important, 'closeness', 'closeness')
+        do_computations(g_remove_most_important)
         draw_graph(g_remove_most_important, pos, "Graph with removal by closeness", 'g3_closeness')
         plt.show()
 
@@ -146,7 +146,7 @@ def bitcoin_robustness():
     print("::: Computing Betweenness :::")
     for x in range(11):
         print('----- Nodes removed: ', x, ' -----')
-        best_node, nodes = compute_centrality(g_remove_most_important, 'betweenness')
+        best_node, nodes = compute_centrality(g_remove_most_important)
         first_nodes = heapq.nlargest(100, nodes, key=nodes.get)
 
         comps = list(nx.connected_component_subgraphs(g_remove_most_important))
@@ -171,7 +171,7 @@ def bitcoin_robustness():
         g_remove_most_important.remove_nodes_from(first_nodes)
 
     if drawGraphOn:
-        do_computations(g_remove_most_important, 'betweenness', 'betweenness')
+        do_computations(g_remove_most_important)
         draw_graph(g_remove_most_important, pos, "Graph with removal by betweenness", 'g3_betweenness')
         plt.show()
 
@@ -299,7 +299,7 @@ def bitcoin_robustness_random():
         g_remove_most_important.remove_nodes_from([best_node])
 
     if drawGraphOn:
-        do_computations(g_remove_most_important, 'degree', 'degree')
+        do_computations(g_remove_most_important)
         draw_graph(g_remove_most_important, pos, "Graph with removal by degree", 'g2_degree')
         plt.show()
 
